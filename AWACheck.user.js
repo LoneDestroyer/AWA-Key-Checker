@@ -22,6 +22,7 @@
 
 const namespace = "AWAKeyChecker:";
 const timeout = 5;
+const giveawayHookSelector = '.row.accordion-section > .col';
 
 // configuration callbacks
 function Callbacks() {
@@ -1214,7 +1215,7 @@ function check_keys(rgb_enabled) {
   }
 
   // Instructions article
-  const rightPanel = document.querySelector('article[class*="top-widget"][class*="instructions"] h1:first-of-type');
+  const rightPanel = document.querySelector(giveawayHookSelector);
 
   // Inject new CSS
   const style = document.createElement("style");
@@ -1412,7 +1413,7 @@ function check_keys(rgb_enabled) {
   checkerWidget.innerHTML = checkerWidgetHtml + `<hr></div></div><br>`;
 
   // Append the div
-  rightPanel.insertAdjacentHTML("beforebegin", checkerWidgetHtml);
+  rightPanel.insertAdjacentHTML("afterbegin", checkerWidgetHtml);
 }
 
 // Wait for variable
@@ -1546,7 +1547,7 @@ async function run() {
   const interval = gmc.get('interval');
   try {
     wait_for_var(() => {
-      wait_for_el('article[class*="top-widget"][class*="instructions"] h1:first-of-type', () => {
+      wait_for_el(giveawayHookSelector, () => {
         check_keys(gmc.get('rgb_enabled'));
       }, interval)
     }, interval);
