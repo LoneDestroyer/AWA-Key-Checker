@@ -18,6 +18,8 @@
 // @grant           GM.setValue
 // @grant           GM_registerMenuCommand
 // @compatible      Firefox
+// @compatible      Chrome
+// @compatible      Opera
 // ==/UserScript==
 
 const namespace = "AWAKeyChecker:";
@@ -1537,23 +1539,25 @@ const logger = (function () {
 window.logger = logger;
 
 // Run
-async function run() {
-  await onInit.add(() => {
+function run() {
+  onInit.add(() => {
     GM_registerMenuCommand('Settings', () => {
       gmc.open();
     });
-  });
 
-  const interval = gmc.get('interval');
-  try {
-    wait_for_var(() => {
-      wait_for_el(giveawayHookSelector, () => {
-        check_keys(gmc.get('rgb_enabled'));
-      }, interval)
-    }, interval);
-  }
-  catch {
-    throw "AWAKeyChacker: Unknown error";
-  }
+    const interval = Number(gmc.get('interval')) || 1000;
+    const rgbEnabled = Boolean(gmc.get('rgb_enabled'));
+
+    try {
+      wait_for_var(() => {
+        wait_for_el(giveawayHookSelector, () => {
+          check_keys(rgbEnabled);
+        }, interval)
+      }, interval);
+    }
+    catch {
+      throw "AWAKeyChacker: Unknown error";
+    }
+  });
 }
 run();
